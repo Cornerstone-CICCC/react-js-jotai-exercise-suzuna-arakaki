@@ -1,26 +1,27 @@
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import {
-  userAtom,
-  // firstnameAtom,
-  // lastnameAtom,
-  // ageAtom,
-  // hobbiesAtom,
+  usersAtom,
+  firstnameAtom,
+  lastnameAtom,
+  ageAtom,
+  hobbiesAtom,
   HOBBIES_LIST,
   type Hobby,
 } from "../atoms/user.atom";
-import { useState, type SubmitEvent } from "react";
+import { type SubmitEvent } from "react";
 
 const User = () => {
-  const setUsers = useSetAtom(userAtom);
-  const [firstnameInput, setFirstnameInput] = useState<string>("");
-  const [lastnameInput, setLastnameInput] = useState<string>("");
-  const [ageInput, setAgeInput] = useState<string>("");
-  const [hobbiesInput, setHobbiesInput] = useState<Hobby[]>([]);
+  const [users, setUsers] = useAtom(usersAtom);
+  // const [firstnameInput, setFirstnameInput] = useState<string>("");
+  // const [lastnameInput, setLastnameInput] = useState<string>("");
+  // const [ageInput, setAgeInput] = useState<string>("");
+  // const [hobbiesInput, setHobbiesInput] = useState<Hobby[]>([]);
+  // const firstname = useAtomValue(firstnameAtom);
 
-  // const [firstnameInput, setFirstnameInput] = useAtom(firstnameAtom);
-  // const [lastnameInput, setLastnameInput] = useAtom(lastnameAtom);
-  // const [ageInput, setAgeInput] = useAtom(ageAtom);
-  // const [hobbiesInput, setHobbiesInput] = useAtom(hobbiesAtom);
+  const [firstnameInput, setFirstnameInput] = useAtom(firstnameAtom);
+  const [lastnameInput, setLastnameInput] = useAtom(lastnameAtom);
+  const [ageInput, setAgeInput] = useAtom(ageAtom);
+  const [hobbiesInput, setHobbiesInput] = useAtom(hobbiesAtom);
   // const hobbies = useAtomValue(HOBBIES_LIST);
 
   const handleCheckbox = (hobby: Hobby) => {
@@ -49,16 +50,25 @@ const User = () => {
     setHobbiesInput([]);
   };
 
+  const handleDelete = (indexDelete: number) => {
+    setUsers((prev) => prev.filter((_, index) => index !== indexDelete));
+  };
+
   return (
     <div>
-      <h2>User</h2>
+      <h2>User List</h2>
       <div>
-        <div>
-          {firstnameInput} {lastnameInput}
-        </div>
-        <div>({ageInput})</div>
-        <div>{hobbiesInput.join(", ")}</div>
+        {users.map((user, index) => (
+          <div key={index}>
+            <div>Firstname: {user.firstname}</div>
+            <div>Lastname: {user.lastname}</div>
+            <div>Age: {user.age}</div>
+            <div>Hobbies: {user.hobbies.join(", ")}</div>
+            <button onClick={() => handleDelete(index)}>Delete</button>
+          </div>
+        ))}
       </div>
+
       <form onSubmit={handleSubmit}>
         <input
           type="text"
